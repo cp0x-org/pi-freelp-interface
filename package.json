@@ -1,0 +1,75 @@
+{
+  "name": "@ekubo/freelp",
+  "version": "0.1.20",
+  "private": false,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build && bun run build:cli",
+    "check-ts": "tsc --noEmit",
+    "lint": "eslint src cli scripts tests",
+    "test": "bun test tests/unit",
+    "test:e2e": "playwright test",
+    "preview": "vite preview --host 127.0.0.1",
+    "package": "bun scripts/package-release.ts",
+    "notices:check": "bun scripts/notices.ts --check",
+    "pack:app": "bun run build && npm pack --ignore-scripts",
+    "build:cli": "bun build cli/main.ts --target=node --outfile=cli-dist/main.js",
+    "test:ux": "bun scripts/ux-audit.ts",
+    "test:lighthouse": "bun scripts/lighthouse.ts"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@ekubo/sdk": "0.0.10",
+    "@eslint/js": "10.0.1",
+    "@ipld/car": "^5.4.7",
+    "@playwright/test": "1.62.1",
+    "@types/bun": "1.4.0",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "6.1.1",
+    "blockstore-core": "^7.0.1",
+    "chrome-launcher": "1.2.1",
+    "eslint": "10.9.0",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "globals": "17.11.0",
+    "ipfs-unixfs-importer": "^17.1.1",
+    "lighthouse": "13.4.1",
+    "prettier": "^3.9.6",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.68.0",
+    "viem": "2.55.19",
+    "vite": "8.2.2"
+  },
+  "bin": {
+    "freelp": "cli-dist/main.js"
+  },
+  "files": [
+    "dist",
+    "cli-dist/main.js",
+    "LICENSE",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EkuboProtocol/freelp.git"
+  },
+  "freelpBundledDependencies": [
+    "@ipld/car",
+    "blockstore-core",
+    "ipfs-unixfs-importer",
+    "react",
+    "react-dom",
+    "viem",
+    "@ekubo/sdk"
+  ],
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
