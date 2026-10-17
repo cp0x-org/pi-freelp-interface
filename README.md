@@ -1,3 +1,30 @@
+# Permissionless FreeLP Interface by cp0x
+
+A mirror of [FreeLP](https://github.com/EkuboProtocol/freelp), Ekubo's ownerless, zero-fee liquidity position manager, hosted by cp0x at https://freelp.cp0x.com as one of its permissionless interfaces (https://pi.cp0x.com). The app is the upstream release v0.1.20 with two changes: a "Hosted by cp0x" section on the About page and the Docker build below. cp0x adds no fees.
+
+## Build and run
+
+```sh
+bash build.sh 0.1.0   # builds and pushes cp0x/pi-freelp-interface:0.1.0 for linux/amd64 and linux/arm64
+docker run --rm -p 4173:4173 cp0x/pi-freelp-interface:0.1.0
+```
+
+The image serves the static build on port 4173. Build on Linux or inside Docker: the upstream tree has `src/positionArtwork.ts` and `src/PositionArtwork.tsx`, whose names collide on case-insensitive file systems such as the macOS default, and `tsc` fails there.
+
+## Updating from upstream
+
+```sh
+git remote add upstream https://github.com/EkuboProtocol/freelp.git
+git fetch upstream --tags
+git merge --allow-unrelated-histories v<new version>   # needed once: this repository starts from an import commit
+```
+
+The import leaves out upstream `.github/workflows` (Ekubo's IPFS deploy for freelp.ekubo.org); drop them again after a merge. GitHub Actions are disabled in this repository.
+
+Contract addresses are fixed by each upstream release. A new contract revision uses a new manager address, and positions opened in an earlier manager stay there (see upstream `docs/contracts.md`).
+
+---
+
 # FreeLP
 
 Try it at https://freelp.ekubo.org/ — no install needed.

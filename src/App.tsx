@@ -21,6 +21,52 @@ function AboutPage() {
         networks. It charges no application fees and talks only to the RPC
         endpoints you configure and the wallet you connect.
       </p>
+      <h3>Hosted by cp0x</h3>
+      <p>
+        This copy is hosted by cp0x at{" "}
+        <a href="https://freelp.cp0x.com/">freelp.cp0x.com</a> as one of its
+        permissionless interfaces (
+        <a href="https://pi.cp0x.com/" target="_blank" rel="noreferrer">
+          pi.cp0x.com
+        </a>
+        ). It runs Ekubo&apos;s open-source FreeLP release {APP_VERSION}; cp0x
+        changed only this note and the build setup and adds no fees.
+      </p>
+      <h3>Why FreeLP</h3>
+      <p>
+        Positions opened on ekubo.org go through Ekubo&apos;s standard positions
+        contract, which keeps 10% of the swap fees you earn for the Ekubo DAO.
+        FreeLP is a separate positions contract published by Ekubo with no fees
+        and no owner, deployed at 0x0dB596aF023b61c681c91c39E540829bf81bEcD5 on
+        Ethereum, Base, Arbitrum and Robinhood Chain. Your liquidity goes into
+        the same Ekubo pools and earns the same fees, and all of them stay
+        yours.
+      </p>
+      <h3>How it works</h3>
+      <ol>
+        <li>
+          Pick a network, two tokens and an Ekubo pool, then set a price range.
+        </li>
+        <li>
+          Deposit both tokens. FreeLP adds the liquidity to Ekubo Core and mints
+          a position NFT to your wallet.
+        </li>
+        <li>Claim fees at any time; all of them go to you.</li>
+        <li>
+          Withdraw everything to get your tokens back; the NFT is burned.
+        </li>
+      </ol>
+      <p>
+        FreeLP is new (September 2026). Read its{" "}
+        <a
+          href="https://github.com/EkuboProtocol/evm-contracts/blob/main/docs/FreeLP-audit-7806.md"
+          target="_blank"
+          rel="noreferrer"
+        >
+          audit notes
+        </a>{" "}
+        before depositing large amounts.
+      </p>
       <h3>Hosted version</h3>
       <p>
         <a href="https://freelp.ekubo.org/">freelp.ekubo.org</a> serves this
