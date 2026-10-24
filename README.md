@@ -16,6 +16,21 @@ The package serves the app locally and opens your browser. Requires Node.js 22+;
 
 You can also open an IPFS build from the **IPFS preview** commit status or GitHub Actions summary.
 
+### Docker
+
+```sh
+cp config.example.json config.json
+docker compose up -d --build
+```
+
+Open http://127.0.0.1:4173/. The image builds the app from source and serves it with the same headers as the npm launcher; `build.sh <version>` builds and pushes the multi-arch `cp0x/pi-freelp-interface` image.
+
+`config.json` (git-ignored, mounted read-only):
+
+- `server.host`, `server.port`: listen address inside the container (default `0.0.0.0:4173`).
+- `server.allowedHosts`: public host names accepted in the `Host` header, such as `["freelp.cp0x.com"]` behind a reverse proxy. Loopback names are always accepted; `["*"]` accepts any.
+- `rpc`: default RPC URL per chain ID. The browser receives these as `runtime-config.json`, so never put private keys or paid endpoints you do not want public here. An RPC set in **Networks** still takes precedence; chains without an entry use the viem default.
+
 ## Use
 
 Connect your wallet to view positions across enabled networks, or open any position by ID at `#/positions/<chainId>/<id>` without a wallet; only its owner can sign. Create a position by selecting a network, tokens, pool, and price range. Deposit amounts are calculated locally; the liquidity chart supports hover, zoom, and range selection, and new pools require an explicit initial price. Add liquidity, withdraw, or claim fees from your positions. Withdrawing all liquidity burns the FreeLP NFT; fee collection preserves it.

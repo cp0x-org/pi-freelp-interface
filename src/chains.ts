@@ -1,6 +1,7 @@
 import * as chains from "viem/chains";
 import type { Chain } from "viem";
 import { DEFAULT_CONTRACTS } from "./deployments";
+import { defaultRpcUrl } from "./runtimeConfig";
 import type { Settings } from "./types";
 // Only networks where this build's contracts are deployed and pools are
 // registered. Other viem mainnets can be enabled after a code check.
@@ -35,6 +36,8 @@ export function chainSettings(id: number, rpcUrl = ""): Settings {
 }
 export function rpcEndpoint(settings: Pick<Settings, "chainId" | "rpcUrl">) {
   return (
-    settings.rpcUrl || chainDefinition(settings.chainId).rpcUrls.default.http[0]
+    settings.rpcUrl ||
+    defaultRpcUrl(settings.chainId) ||
+    chainDefinition(settings.chainId).rpcUrls.default.http[0]
   );
 }

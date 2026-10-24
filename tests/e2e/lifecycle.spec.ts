@@ -194,7 +194,7 @@ for (const { missingDecimals, native, batch } of [
         request.method() === "GET" &&
         parsed.origin === "http://127.0.0.1:14173" &&
         (parsed.pathname === "/" ||
-          /^\/(assets\/[^/]+\.(js|css)|tokens\/\d+\.json|favicon\.svg)$/.test(
+          /^\/(assets\/[^/]+\.(js|css)|tokens\/\d+\.json|favicon\.svg|runtime-config\.json)$/.test(
             parsed.pathname,
           ))
       )

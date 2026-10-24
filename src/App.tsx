@@ -1,4 +1,5 @@
 import { useCopied } from "./useCopied";
+import { Cp0xFooter } from "./Cp0xFooter";
 import { AccountControl } from "./AccountControl";
 import { useEffect, useState } from "react";
 import { useSession } from "./session";
@@ -154,6 +155,7 @@ export function App() {
           No application fees. Network gas costs apply.
         </span>
       </footer>
+      <Cp0xFooter />
     </main>
   );
 }

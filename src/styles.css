@@ -793,3 +793,19 @@ header { flex-wrap: wrap; }
 @media (max-width: 650px) {
   .position-heading { grid-template-columns: minmax(0, 1fr); }
 }
+/* cp0x hosting attribution, matching pi.cp0x.com. */
+.cp0x-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px 32px; margin-top: 16px; padding: 16px 20px; background: #16161f; color: #eee; border-radius: 12px; }
+.cp0x-logo { display: flex; align-items: center; }
+.cp0x-logo-letter { fill: #eee; }
+.cp0x-logo-accent { fill: #2cfffe; }
+.cp0x-donations { display: grid; gap: 4px; margin: 0; font-size: 14px; min-width: 0; }
+.cp0x-donations > div { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.cp0x-donations dt { font-weight: 700; }
+.cp0x-donations dd { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0; min-width: 0; }
+.cp0x-donations .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; overflow-wrap: anywhere; }
+.cp0x-donations button { min-height: 32px; background: transparent; color: #eee; border: 1px solid #777; border-radius: 6px; padding: 2px 10px; font-size: 12px; }
+.cp0x-donations button:hover { background: transparent; border-color: #2cfffe; color: #2cfffe; }
+.cp0x-social { display: flex; gap: 8px; }
+.cp0x-social a { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; color: #eee; }
+.cp0x-social a:hover { color: #2cfffe; }
+.cp0x-footer :focus-visible { outline: 2px solid #2cfffe; outline-offset: 2px; }

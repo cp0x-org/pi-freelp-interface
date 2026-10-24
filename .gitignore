@@ -5,6 +5,10 @@ dist/
 playwright-report/
 test-results/
 .worktrees/
+.idea/
 release/
 
 cli-dist/
+
+# Local deployment config (copy of config.example.json)
+/config.json

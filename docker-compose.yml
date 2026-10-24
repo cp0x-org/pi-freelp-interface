@@ -1,0 +1,22 @@
+services:
+  freelp:
+    build: .
+    image: cp0x/pi-freelp-interface:local
+    # The container listens on server.port from config.json (4173 by default).
+    # Wallet settings and RPC overrides live in browser storage per origin, so
+    # keep the public URL stable.
+    ports:
+      - "127.0.0.1:4173:4173"
+    volumes:
+      # cp config.example.json config.json
+      - ./config.json:/app/config.json:ro
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:4173/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
