@@ -554,15 +554,13 @@ input[type="range"], input[type="checkbox"] { accent-color: #111; }
 .token-search-row button { flex: none; font-size: 12px; padding: 8px; }
 
 header { flex-wrap: wrap; }
-.account-control, .wallet-connect { margin-left: auto; }
+.account-control, .header-connect { margin-left: auto; }
 .account-control { position: relative; }
 .account-control > summary { display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 6px 10px; border: 1px solid #ccc; border-radius: 24px; list-style: none; font-size: 14px; }
 .account-control > summary::-webkit-details-marker { display: none; }
 .account-identicon { width: 28px; height: 28px; border-radius: 50%; }
 .account-menu { position: absolute; right: 0; top: calc(100% + 8px); z-index: 5; background: white; border: 1px solid #ccc; border-radius: 12px; padding: 16px; display: grid; gap: 12px; width: min(340px, calc(100vw - 48px)); }
 .account-menu .mono { overflow-wrap: anywhere; font-size: 13px; }
-.wallet-connect { display: flex; gap: 8px; flex-wrap: wrap; }
-.wallet-unavailable { font-size: 13px; color: #555; }
 @media (max-width: 700px) { header nav { order: 3; flex-basis: 100%; } }
 .network-list { border-top: 1px solid #ddd; }
 .network-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 0; border-bottom: 1px solid #ddd; }
@@ -786,8 +784,6 @@ header { flex-wrap: wrap; }
 .withdrawal-review dd { margin: 0; display: grid; gap: 4px; text-align: right; }
 .withdrawal-fields .recipient-input { width: 100%; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 14px; }
 .withdrawal-fields > label { display: block; margin-top: 16px; }
-.github-link { display: inline-flex; align-items: center; color: inherit; }
-.app-version { color: #555; font-size: 13px; }
 .about-page { max-width: 76ch; }
 .about-page h3 { margin: 28px 0 8px; }
 @media (max-width: 650px) {
@@ -809,3 +805,36 @@ header { flex-wrap: wrap; }
 .cp0x-social a { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; color: #eee; }
 .cp0x-social a:hover { color: #2cfffe; }
 .cp0x-footer :focus-visible { outline: 2px solid #2cfffe; outline-offset: 2px; }
+.brand { display: flex; align-items: center; gap: 14px; }
+.cp0x-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 10px; background: #16161f; color: #eee; border-radius: 8px; font-size: 12px; text-decoration: none; }
+.cp0x-badge svg { width: 49px; height: 20px; }
+.cp0x-badge:hover { background: #000; }
+.cp0x-badge:focus-visible { outline: 2px solid #2cfffe; outline-offset: 2px; }
+h1 a { text-decoration: none; }
+header nav .external-link { color: #555; }
+/* One-row header: brand, navigation, wallet. Narrow screens fold the
+   navigation into a menu button at the end of the row. */
+header { flex-wrap: nowrap; position: relative; gap: 24px; }
+.brand { flex: none; }
+header nav.main-nav { flex: 1 1 auto; min-width: 0; flex-wrap: nowrap; }
+.main-nav-links { display: flex; align-items: center; gap: 20px; white-space: nowrap; }
+.menu-toggle { display: none; }
+.account-control, .header-connect { flex: none; }
+.header-connect { min-height: 40px; padding: 8px 16px; font-size: 14px; white-space: nowrap; }
+@media (max-width: 959px) {
+  header { gap: 12px; }
+  header nav.main-nav { order: 3; flex: none; flex-basis: auto; }
+  .menu-toggle { display: flex; align-items: center; justify-content: center; width: 40px; min-height: 40px; padding: 0; }
+  .main-nav-links { display: none; position: absolute; top: calc(100% - 12px); right: 0; z-index: 20; flex-direction: column; align-items: stretch; gap: 0; min-width: 240px; padding: 8px; background: #fff; border: 1px solid #ccc; border-radius: 12px; }
+  .main-nav.open .main-nav-links { display: flex; }
+  header nav .main-nav-links a { padding: 10px 12px; }
+}
+@media (max-width: 480px) {
+  h1 { font-size: 24px; }
+  .brand { gap: 8px; }
+  .cp0x-badge { padding: 5px 8px; }
+  .cp0x-badge > span { display: none; }
+  .cp0x-badge svg { width: 42px; height: 17px; }
+  .header-connect { padding: 8px 12px; }
+  .account-control > summary .mono { display: none; }
+}

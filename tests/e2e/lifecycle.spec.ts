@@ -32,6 +32,7 @@ import {
   deploymentAddress,
   prepareDeployment,
 } from "../../src/deterministic";
+import { connectWallet } from "../support/wallet";
 const rpcUrl = "http://127.0.0.1:18545";
 function transactionStatus(page: Page) {
   return page.locator(
@@ -351,12 +352,12 @@ for (const { missingDecimals, native, batch } of [
       { rpcUrl, account: account.address, core, manager, batch },
     );
     await page.goto("/");
-    await page.getByRole("button", { name: "Connect Local wallet" }).click();
+    await connectWallet(page);
     await openDeployPage(page, batch);
     if (missingDecimals) {
       verificationFailure = "core";
       await page.reload();
-      await page.getByRole("button", { name: "Connect Local wallet" }).click();
+      await connectWallet(page);
       await expect(
         page.getByRole("button", { name: "Deploy Core", exact: true }),
       ).toBeDisabled();
@@ -540,7 +541,7 @@ for (const { missingDecimals, native, batch } of [
     await page.getByRole("link", { name: "Positions", exact: true }).click();
     await seedIncompleteActivity(page);
     await page.reload();
-    await page.getByRole("button", { name: "Connect Local wallet" }).click();
+    await connectWallet(page);
     await page.getByRole("link", { name: "Positions", exact: true }).click();
     await page
       .getByRole("link", { name: "Manage position #1", exact: true })
@@ -614,7 +615,7 @@ for (const { missingDecimals, native, batch } of [
       page.getByRole("button", { name: "Transfer NFT to recipient" }),
     ).toHaveCount(0);
     await page.reload();
-    await page.getByRole("button", { name: "Connect Local wallet" }).click();
+    await connectWallet(page);
     await page.getByRole("link", { name: "Positions", exact: true }).click();
     await page
       .getByRole("link", { name: "Manage position #1", exact: true })
@@ -890,7 +891,7 @@ async function checkStableCreation(
     await client.waitForTransactionReceipt({ hash });
   }
   await page.reload();
-  await page.getByRole("button", { name: "Connect Local wallet" }).click();
+  await connectWallet(page);
   await page.getByRole("link", { name: "Positions", exact: true }).click();
   await page
     .getByRole("link", { name: "Create position", exact: true })

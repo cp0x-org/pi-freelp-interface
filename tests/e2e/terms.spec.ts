@@ -1,5 +1,6 @@
 import { chainDefinition } from "../../src/chains";
 import { test, expect } from "@playwright/test";
+import { connectWallet } from "../support/wallet";
 
 for (const storageAvailable of [true, false]) {
   test(`terms stay informational across account changes (storage: ${storageAvailable})`, async ({
@@ -81,7 +82,7 @@ for (const storageAvailable of [true, false]) {
     await expect(
       page.getByRole("button", { name: "Accept terms", exact: true }),
     ).toHaveCount(0);
-    await page.getByRole("button", { name: "Connect Test wallet" }).click();
+    await connectWallet(page);
     await page.evaluate(() => {
       location.hash = "#/deploy/1";
     });
@@ -91,7 +92,7 @@ for (const storageAvailable of [true, false]) {
     await page.evaluate(() =>
       window.dispatchEvent(new Event("test:accountChanged")),
     );
-    await page.getByRole("button", { name: "Connect Test wallet" }).click();
+    await connectWallet(page);
     await expect(
       page.getByRole("button", { name: "Deploy Core", exact: true }),
     ).toBeEnabled();

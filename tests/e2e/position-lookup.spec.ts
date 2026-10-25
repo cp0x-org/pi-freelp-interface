@@ -8,6 +8,7 @@ import {
 } from "viem";
 import snapshot from "../../artifacts/FreeLPDataFetcher.json" with { type: "json" };
 import manager from "../../artifacts/FreeLP.json" with { type: "json" };
+import { connectWallet } from "../support/wallet";
 
 const owner = "0x1111111111111111111111111111111111111111";
 const stranger = "0x2222222222222222222222222222222222222222";
@@ -152,9 +153,7 @@ test("a position is viewable by ID without a wallet and stays read-only for non-
     page.getByRole("button", { name: "Collect fees" }),
   ).toBeDisabled();
 
-  await page
-    .getByRole("button", { name: "Connect Test wallet", exact: true })
-    .click();
+  await connectWallet(page);
   await expect(
     page.getByText("This position is owned by another wallet."),
   ).toBeVisible();
@@ -178,9 +177,7 @@ test("the owner can withdraw while the RPC is busy, and the dialog reviews amoun
   const methods = await mockChain(page, state);
   await installWallet(page, owner);
   await page.goto("/#/positions/1/1");
-  await page
-    .getByRole("button", { name: "Connect Test wallet", exact: true })
-    .click();
+  await connectWallet(page);
   // The owner's portfolio load replaces the lookup view; either view must
   // enable actions, so assert on the controls rather than the owner line.
   const withdraw = page.getByRole("button", { name: "Withdraw", exact: true });

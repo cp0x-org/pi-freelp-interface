@@ -158,7 +158,9 @@ test("creation is reachable before wallet connection and deployment omits addres
     page.locator("header").getByRole("link", { name: "Create", exact: true }),
   ).toHaveCount(0);
   await expect(
-    page.getByRole("button", { name: "Connect wallet", exact: true }),
+    page
+      .locator("#main-content")
+      .getByRole("button", { name: "Connect wallet", exact: true }),
   ).toBeVisible();
   await page
     .getByRole("link", { name: "Create position", exact: true })

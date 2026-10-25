@@ -1,7 +1,7 @@
 import { useCopied } from "./useCopied";
-import { Cp0xFooter } from "./Cp0xFooter";
+import { Cp0xFooter, Cp0xHeaderLink, CP0X_URL, PI_URL } from "./Cp0xFooter";
 import { AccountControl } from "./AccountControl";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSession } from "./session";
 import { SettingsPage } from "./SettingsPage";
 import { TermsPage } from "./TermsPage";
@@ -12,32 +12,51 @@ import {
 } from "./routes";
 import { CreatePage } from "./CreatePage";
 import { PositionsPage } from "./PositionsPage";
-import { APP_VERSION, CONTRACTS_SOURCE, REPOSITORY_URL } from "./version";
+import {
+  CONTRACTS_SOURCE,
+  REPOSITORY_URL,
+  UPSTREAM_APP_URL,
+  UPSTREAM_REPOSITORY_URL,
+} from "./version";
 function AboutPage() {
   return (
     <section className="about-page">
       <h2>About FreeLP</h2>
       <p>
-        FreeLP is an ownerless liquidity position manager for Ekubo on EVM
-        networks. It charges no application fees and talks only to the RPC
-        endpoints you configure and the wallet you connect.
+        This is the cp0x edition of FreeLP, an ownerless liquidity position
+        manager for Ekubo on EVM networks. cp0x hosts it as one of its{" "}
+        <a href={PI_URL} target="_blank" rel="noreferrer">
+          Permissionless Interfaces
+        </a>
+        : open frontends with no application fees and no tracking. It talks only
+        to the RPC endpoints you configure and the wallet you connect.
       </p>
-      <h3>Hosted version</h3>
+      <h3>cp0x edition</h3>
       <p>
-        <a href="https://freelp.ekubo.org/">freelp.ekubo.org</a> serves this
-        release. Your wallet still signs transactions in the browser.
+        Source:{" "}
+        <a href={REPOSITORY_URL} target="_blank" rel="noreferrer">
+          github.com/cp0x-org/pi-freelp-interface
+        </a>
+        . It adds cp0x branding, Docker packaging and per-deployment RPC
+        defaults; the contracts and transaction logic are unchanged.
       </p>
       <h3>Run locally</h3>
-      <Command command="bunx @ekubo/freelp@latest" />
+      <Command command="git clone https://github.com/cp0x-org/pi-freelp-interface && cd pi-freelp-interface && cp config.example.json config.json && docker compose up -d --build" />
       <p>
-        <code>npx @ekubo/freelp@latest</code> works the same way. Add a version
-        suffix such as <code>@ekubo/freelp@{APP_VERSION}</code> to keep a
-        specific release. The package opens a local web server; your wallet
-        signs transactions in the browser.
+        Then open <code>http://127.0.0.1:4173/</code>. Your wallet signs
+        transactions in the browser.
       </p>
-      <h3>Version and source</h3>
+      <h3>Original FreeLP</h3>
       <p>
-        FreeLP {APP_VERSION} · contracts pinned to{" "}
+        FreeLP is developed by Ekubo. For reference, the original app is at{" "}
+        <a href={UPSTREAM_APP_URL} target="_blank" rel="noreferrer">
+          freelp.ekubo.org
+        </a>{" "}
+        and its source at{" "}
+        <a href={UPSTREAM_REPOSITORY_URL} target="_blank" rel="noreferrer">
+          github.com/EkuboProtocol/freelp
+        </a>
+        . Contracts are pinned to{" "}
         <a
           href={`https://github.com/${CONTRACTS_SOURCE.repository}/commit/${CONTRACTS_SOURCE.commit}`}
           target="_blank"
@@ -45,10 +64,7 @@ function AboutPage() {
         >
           {CONTRACTS_SOURCE.repository}@{CONTRACTS_SOURCE.commit.slice(0, 7)}
         </a>
-        {" · "}
-        <a href={REPOSITORY_URL} target="_blank" rel="noreferrer">
-          source repository
-        </a>
+        .
       </p>
       <p>
         Contract addresses are fixed by this build. Each network's Deploy page
@@ -113,7 +129,12 @@ export function App() {
         Skip to content
       </a>
       <header>
-        <h1>FreeLP</h1>
+        <div className="brand">
+          <h1>
+            <a href="#/positions">FreeLP</a>
+          </h1>
+          <Cp0xHeaderLink />
+        </div>
         <MainNavigation route={route} />
         <AccountControl />
       </header>
@@ -140,17 +161,6 @@ export function App() {
       <footer className="row">
         <a href="#/terms">Terms</a>
         <a href="#/build">About FreeLP</a>
-        <a
-          className="github-link"
-          href={REPOSITORY_URL}
-          target="_blank"
-          rel="noreferrer"
-          aria-label="FreeLP on GitHub"
-          title="FreeLP on GitHub"
-        >
-          <GitHubMark />
-        </a>
-        <span className="app-version">v{APP_VERSION}</span>
         <span className="free-forever">
           No application fees. Network gas costs apply.
         </span>
@@ -161,26 +171,81 @@ export function App() {
 }
 
 function MainNavigation({ route }: { route: string }) {
+  const [open, setOpen] = useState(false);
+  const nav = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const close = (event: MouseEvent) => {
+      if (!nav.current?.contains(event.target as Node)) setOpen(false);
+    };
+    document.addEventListener("click", close);
+    return () => document.removeEventListener("click", close);
+  }, [open]);
   return (
-    <nav aria-label={"Main navigation"}>
-      <a
-        href="#/positions"
-        aria-current={
-          route.startsWith("#/positions") || !route ? "page" : undefined
-        }
+    <nav
+      ref={nav}
+      className={open ? "main-nav open" : "main-nav"}
+      aria-label={"Main navigation"}
+      onKeyDown={(event) => {
+        if (event.key === "Escape") setOpen(false);
+      }}
+    >
+      <button
+        type="button"
+        className="menu-toggle"
+        aria-label="Menu"
+        aria-expanded={open}
+        aria-controls="main-nav-links"
+        onClick={() => setOpen(!open)}
       >
-        Positions
-      </a>
-      <a
-        href="#/networks"
-        aria-current={
-          route.startsWith("#/networks") || route.startsWith("#/settings")
-            ? "page"
-            : undefined
-        }
+        <svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22">
+          <path
+            d="M3 6h18M3 12h18M3 18h18"
+            stroke="currentColor"
+            strokeWidth="2"
+          />
+        </svg>
+      </button>
+      <div
+        id="main-nav-links"
+        className="main-nav-links"
+        onClick={() => setOpen(false)}
       >
-        Networks
-      </a>
+        <a
+          href="#/positions"
+          aria-current={
+            route.startsWith("#/positions") || !route ? "page" : undefined
+          }
+        >
+          Positions
+        </a>
+        <a
+          href="#/networks"
+          aria-current={
+            route.startsWith("#/networks") || route.startsWith("#/settings")
+              ? "page"
+              : undefined
+          }
+        >
+          Networks
+        </a>
+        <a
+          className="external-link"
+          href={CP0X_URL}
+          target="_blank"
+          rel="noreferrer"
+        >
+          cp0x
+        </a>
+        <a
+          className="external-link"
+          href={PI_URL}
+          target="_blank"
+          rel="noreferrer"
+        >
+          Permissionless Interfaces
+        </a>
+      </div>
     </nav>
   );
 }
@@ -206,19 +271,5 @@ function Command({ command }: { command: string }) {
       </div>
       <span role="status">{error}</span>
     </>
-  );
-}
-
-function GitHubMark() {
-  return (
-    <svg
-      aria-hidden="true"
-      viewBox="0 0 16 16"
-      width="18"
-      height="18"
-      fill="currentColor"
-    >
-      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z" />
-    </svg>
   );
 }

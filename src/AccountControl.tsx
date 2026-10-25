@@ -2,6 +2,7 @@ import { useCopied } from "./useCopied";
 import { keccak256, type Address } from "viem";
 import { useSession } from "./session";
 import { errorMessage } from "./errors";
+import { WalletConnectButton } from "./WalletConnectButton";
 
 function Identicon({ address }: { address: Address }) {
   const hash = keccak256(address);
@@ -65,23 +66,5 @@ export function AccountControl() {
         </div>
       </details>
     );
-  return (
-    <div className="wallet-connect">
-      {session.wallets.map((w) => (
-        <button
-          key={w.info.uuid}
-          onClick={() =>
-            void session
-              .connect(w)
-              .catch((error) => session.setStatus(errorMessage(error)))
-          }
-        >
-          Connect {w.info.name}
-        </button>
-      ))}
-      {!session.wallets.length ? (
-        <span className="wallet-unavailable">No wallet detected</span>
-      ) : null}
-    </div>
-  );
+  return <WalletConnectButton className="primary-button header-connect" />;
 }

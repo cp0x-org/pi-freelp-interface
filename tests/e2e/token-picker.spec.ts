@@ -6,6 +6,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { decodeFunctionData, encodeFunctionResult, zeroAddress } from "viem";
 import { NETWORKS } from "../../src/networks";
 import fetcher from "../../artifacts/FreeLPDataFetcher.json" with { type: "json" };
+import { connectWallet } from "../support/wallet";
 
 test("picker batches balances only on the selected network, caches reads, and supports keyboard selection", async ({
   page,
@@ -65,7 +66,7 @@ test("picker batches balances only on the selected network, caches reads, and su
   await mockDeployments(page);
   await mockPoolData(page);
   await page.goto("/#/create");
-  await page.getByRole("button", { name: "Connect Balance wallet" }).click();
+  await connectWallet(page);
   await page.getByRole("button", { name: "Select first token" }).click();
   const dialog = page.getByRole("dialog");
   await expect(

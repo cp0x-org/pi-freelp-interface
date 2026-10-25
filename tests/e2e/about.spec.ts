@@ -4,19 +4,33 @@ const { version } = pkg;
 import source from "../../artifacts/source.json" with { type: "json" };
 import { mockDeployments } from "../support/deploymentRpc";
 
-test("the footer links GitHub and shows the version, and About holds one run command and the source pin", async ({
+test("the footer and header credit cp0x without the upstream GitHub link or version, and About holds one run command and the source pin", async ({
   page,
 }) => {
   await mockDeployments(page);
   await page.goto("/#/networks");
   const footer = page.locator("footer");
-  await expect(footer.getByText(`v${version}`)).toBeVisible();
-  const github = footer.getByRole("link", { name: "FreeLP on GitHub" });
-  await expect(github).toHaveAttribute(
-    "href",
-    "https://github.com/EkuboProtocol/freelp",
-  );
-  await expect(github.locator("svg")).toBeVisible();
+  await expect(footer.getByText(`v${version}`)).toHaveCount(0);
+  await expect(
+    page.getByRole("link", { name: "FreeLP on GitHub" }),
+  ).toHaveCount(0);
+  const header = page.locator("header");
+  for (const name of ["FreeLP", "FreeLP by cp0x, home"])
+    await expect(
+      header.getByRole("link", { name, exact: true }),
+    ).toHaveAttribute("href", "#/positions");
+  await expect(
+    header.getByRole("link", { name: "cp0x", exact: true }),
+  ).toHaveAttribute("href", "https://cp0x.com/");
+  await expect(
+    header.getByRole("link", {
+      name: "Permissionless Interfaces",
+      exact: true,
+    }),
+  ).toHaveAttribute("href", "https://pi.cp0x.com/");
+  await expect(
+    page.getByRole("link", { name: "cp0x on GitHub" }),
+  ).toHaveAttribute("href", "https://github.com/cp0x-org");
   await footer.getByRole("link", { name: "About FreeLP" }).click();
   await expect(
     page.getByRole("heading", { name: "About FreeLP", exact: true }),
@@ -26,7 +40,19 @@ test("the footer links GitHub and shows the version, and About holds one run com
   await expect(page.locator("#main-content")).not.toContainText(
     /0x[0-9a-fA-F]{40}/,
   );
-  await expect(page.getByText(`FreeLP ${version}`)).toBeVisible();
+  const about = page.locator(".about-page");
+  await expect(about).not.toContainText(version);
+  await expect(
+    about.getByText("This is the cp0x edition of FreeLP"),
+  ).toBeVisible();
+  await expect(
+    about.getByRole("link", {
+      name: "github.com/cp0x-org/pi-freelp-interface",
+    }),
+  ).toHaveAttribute("href", "https://github.com/cp0x-org/pi-freelp-interface");
+  await expect(
+    about.getByRole("link", { name: "github.com/EkuboProtocol/freelp" }),
+  ).toHaveAttribute("href", "https://github.com/EkuboProtocol/freelp");
   await expect(
     page.getByRole("link", {
       name: `${source.repository}@${source.commit.slice(0, 7)}`,

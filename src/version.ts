@@ -5,5 +5,9 @@ import pkg from "../package.json" with { type: "json" };
 // the manifest so the two can never disagree.
 export const APP_VERSION =
   typeof __APP_VERSION__ === "string" ? __APP_VERSION__ : pkg.version;
-export const REPOSITORY_URL = "https://github.com/EkuboProtocol/freelp";
+// This cp0x edition; the original FreeLP is linked only as a reference.
+export const REPOSITORY_URL = "https://github.com/cp0x-org/pi-freelp-interface";
+export const UPSTREAM_REPOSITORY_URL =
+  "https://github.com/EkuboProtocol/freelp";
+export const UPSTREAM_APP_URL = "https://freelp.ekubo.org/";
 export const CONTRACTS_SOURCE = source;

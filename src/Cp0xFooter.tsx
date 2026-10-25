@@ -3,7 +3,8 @@ import { useCopied } from "./useCopied";
 
 // cp0x hosting attribution: logo, donation addresses and social links, as on
 // pi.cp0x.com and the other cp0x interfaces.
-const HOME_URL = "https://pi.cp0x.com/";
+export const CP0X_URL = "https://cp0x.com/";
+export const PI_URL = "https://pi.cp0x.com/";
 const DONATIONS = [
   { label: "ETH", address: "0x4c82cfF7398f3D43b36e41B10fF6F42b14DD9385" },
   { label: "BTC", address: "3G38fhKSPVfEWQ3GdrfAYjz8VgPfd5LHBm" },
@@ -37,12 +38,27 @@ const SOCIAL: { name: string; href: string; icon: ReactNode }[] = [
   },
 ];
 
+// Header badge next to the FreeLP title; like the title it opens the app home.
+export function Cp0xHeaderLink() {
+  return (
+    <a
+      className="cp0x-badge"
+      href="#/positions"
+      aria-label="FreeLP by cp0x, home"
+      title="FreeLP by cp0x"
+    >
+      <span aria-hidden="true">by</span>
+      <Cp0xLogo />
+    </a>
+  );
+}
+
 export function Cp0xFooter() {
   return (
     <section className="cp0x-footer" aria-label="cp0x">
       <a
         className="cp0x-logo"
-        href={HOME_URL}
+        href={CP0X_URL}
         target="_blank"
         rel="noreferrer"
         aria-label="Permissionless Interfaces by cp0x"

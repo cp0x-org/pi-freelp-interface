@@ -1,4 +1,5 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
+import { connectWallet } from "../support/wallet";
 
 const provider = () => ({
   request: async () => ["0x1111111111111111111111111111111111111111"],
@@ -28,14 +29,7 @@ test("an announced wallet suppresses the injected fallback even through a differ
     );
   });
   await page.goto("/#/build");
-  await expect(
-    page.getByRole("button", { name: "Connect Ambire", exact: true }),
-  ).toBeVisible();
-  await page.waitForTimeout(600);
-  await expect(
-    page.getByRole("button", { name: "Connect Injected wallet", exact: true }),
-  ).toHaveCount(0);
-  await expect(page.getByRole("button", { name: /^Connect / })).toHaveCount(1);
+  await expectSingleWalletConnects(page);
 });
 
 test("a legacy-only injection still offers the injected wallet", async ({
@@ -48,8 +42,44 @@ test("a legacy-only injection still offers the injected wallet", async ({
     });
   }, provider.toString());
   await page.goto("/#/build");
-  await expect(
-    page.getByRole("button", { name: "Connect Injected wallet", exact: true }),
-  ).toBeVisible();
-  await expect(page.getByRole("button", { name: /^Connect / })).toHaveCount(1);
+  await expectSingleWalletConnects(page);
 });
+
+test("several wallets share one header button and a picker", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    for (const name of ["MetaMask", "Rabby", "Phantom"])
+      window.addEventListener("eip6963:requestProvider", () =>
+        window.dispatchEvent(
+          new CustomEvent("eip6963:announceProvider", {
+            detail: {
+              info: { uuid: name, name },
+              provider: {
+                request: async () => [
+                  "0x1111111111111111111111111111111111111111",
+                ],
+              },
+            },
+          }),
+        ),
+      );
+  });
+  await page.goto("/#/build");
+  const header = page.locator("header");
+  await expect(header.getByRole("button", { name: /^Connect/ })).toHaveCount(1);
+  await connectWallet(page, "Rabby");
+  await expect(header.locator(".account-control")).toBeVisible();
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+});
+
+// With exactly one discovered wallet the header button connects directly;
+// a second (for example a duplicate injected fallback) would open the picker.
+async function expectSingleWalletConnects(page: Page) {
+  // The legacy window.ethereum entry appears only after announcements had
+  // time to arrive.
+  await page.waitForTimeout(600);
+  await connectWallet(page);
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  await expect(page.locator("header .account-control")).toBeVisible();
+}

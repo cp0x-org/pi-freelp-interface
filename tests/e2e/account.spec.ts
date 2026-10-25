@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { connectWallet } from "../support/wallet";
 
 test("wallet errors render messages and the connected account has a local header identicon", async ({
   page,
@@ -27,7 +28,7 @@ test("wallet errors render messages and the connected account has a local header
     });
   });
   await page.goto("/#/build");
-  await page.getByRole("button", { name: "Connect Test wallet" }).click();
+  await connectWallet(page);
   await expect(page.locator(".status[role=status]")).toContainText(
     "Request declined",
   );
@@ -38,7 +39,7 @@ test("wallet errors render messages and the connected account has a local header
   );
   await page.getByRole("button", { name: "Dismiss notification" }).click();
   await expect(page.locator(".notification-toast")).toHaveCount(0);
-  await page.getByRole("button", { name: "Connect Test wallet" }).click();
+  await connectWallet(page);
   const account = page.locator("header .account-control");
   await expect(account.locator("svg")).toBeVisible();
   await account.locator("summary").click();
@@ -68,10 +69,12 @@ test("wallet errors render messages and the connected account has a local header
   }
   await account.getByRole("button", { name: "Disconnect wallet" }).click();
   await expect(
-    page.getByRole("button", { name: "Connect Test wallet" }),
+    page
+      .locator("header")
+      .getByRole("button", { name: "Connect wallet", exact: true }),
   ).toBeVisible();
   await expect(page.locator("header .account-control")).toHaveCount(0);
-  await page.getByRole("button", { name: "Connect Test wallet" }).click();
+  await connectWallet(page);
   await expect(page.locator("header .account-control")).toBeVisible();
 });
 
@@ -96,7 +99,7 @@ test("long notifications scroll within the viewport and remain dismissible", asy
     });
   });
   await page.goto("/#/build");
-  await page.getByRole("button", { name: "Connect Test wallet" }).click();
+  await connectWallet(page);
   const toast = page.locator(".notification-toast");
   await expect(toast).toBeVisible();
   const bounds = await toast.boundingBox();

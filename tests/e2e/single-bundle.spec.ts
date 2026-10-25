@@ -9,7 +9,9 @@ test("page navigation uses the initial JavaScript bundle", async ({ page }) => {
   });
   await page.goto("/");
   await expect(
-    page.getByRole("button", { name: "Connect wallet", exact: true }),
+    page
+      .locator("#main-content")
+      .getByRole("button", { name: "Connect wallet", exact: true }),
   ).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Your FreeLP positions", exact: true }),

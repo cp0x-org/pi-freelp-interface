@@ -1,4 +1,4 @@
-import { extractPositionArtworkImage } from "./positionArtwork";
+import { extractPositionArtworkImage } from "./positionArtworkImage";
 import { useMemo } from "react";
 import "./positionArtwork.css";
 

@@ -3,6 +3,7 @@ import { test, expect } from "@playwright/test";
 import { decodeFunctionData, encodeFunctionResult, zeroAddress } from "viem";
 import { NETWORKS } from "../../src/networks";
 import snapshot from "../../artifacts/FreeLPDataFetcher.json" with { type: "json" };
+import { connectWallet } from "../support/wallet";
 
 test("all networks load independently with exactly one portfolio RPC each", async ({
   page,
@@ -89,9 +90,7 @@ test("all networks load independently with exactly one portfolio RPC each", asyn
   });
   await page.goto("/");
   await expect(page.getByLabel("Active network")).toHaveCount(0);
-  await page
-    .getByRole("button", { name: "Connect wallet", exact: true })
-    .click();
+  await connectWallet(page);
   await expect(page.locator(".portfolio-position")).toHaveCount(3);
   await expect(page.locator(".current-price strong")).toHaveText([
     "1000000000000",
@@ -141,12 +140,13 @@ test("all networks load independently with exactly one portfolio RPC each", asyn
     ).toBeVisible();
     await page.waitForLoadState("networkidle");
     if (exit === "back") await page.goBack();
-    else if (exit === "navigation")
-      await page
-        .getByRole("navigation")
-        .getByRole("link", { name: "Positions", exact: true })
-        .click();
-    else
+    else if (exit === "navigation") {
+      // Narrow screens fold the main navigation into a menu button.
+      const nav = page.getByRole("navigation", { name: "Main navigation" });
+      const menu = nav.getByRole("button", { name: "Menu" });
+      if (await menu.isVisible()) await menu.click();
+      await nav.getByRole("link", { name: "Positions", exact: true }).click();
+    } else
       await page
         .getByRole("link", { name: "All positions", exact: true })
         .click();
@@ -199,9 +199,7 @@ test("RPC failure never claims an empty portfolio and a targeted retry recovers"
     },
   );
   await page.goto("/");
-  await page
-    .getByRole("button", { name: "Connect wallet", exact: true })
-    .click();
+  await connectWallet(page);
   await expect(
     page.getByText(
       "Positions could not be checked on all enabled networks. Retry the unavailable networks below.",
